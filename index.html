@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muhammed Ferdy — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6c63ff;
+      --accent2: #00e5c3;
+      --text: #f0f0f5;
+      --muted: #888899;
+      --radius: 20px;
+      --glow: 0 0 40px rgba(108,99,255,0.25);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Custom Cursor ── */
+    #cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      pointer-events: none;
+    }
+    #cursor .dot {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%,-50%);
+      transition: transform .1s;
+    }
+    #cursor .ring {
+      position: absolute; top: 0; left: 0;
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%,-50%);
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94), width .3s, height .3s, opacity .3s;
+      opacity: 0.6;
+    }
+    body.hovering #cursor .ring {
+      width: 56px; height: 56px; opacity: 1;
+    }
+
+    /* ── Noise Overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      pointer-events: none;
+    }
+
+    /* ── Gradient Orbs ── */
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(90px);
+      pointer-events: none; z-index: 0;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(108,99,255,.15); top: -150px; left: -150px; }
+    .orb-2 { width: 400px; height: 400px; background: rgba(0,229,195,.1); bottom: 10%; right: -100px; }
+    .orb-3 { width: 300px; height: 300px; background: rgba(108,99,255,.08); top: 50%; left: 40%; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 5%;
+      backdrop-filter: blur(20px);
+      background: rgba(10,10,15,.7);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s;
+    }
+    nav.scrolled { padding: 14px 5%; }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.3rem;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex; gap: 36px; list-style: none;
+    }
+    .nav-links a {
+      color: var(--muted); text-decoration: none;
+      font-size: .88rem; font-weight: 500; letter-spacing: .5px;
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1.5px; background: var(--accent2);
+      transition: width .3s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff !important;
+      padding: 9px 22px; border-radius: 50px;
+      font-weight: 500 !important;
+      transition: opacity .2s, transform .2s !important;
+    }
+    .nav-cta:hover { opacity: .85; transform: translateY(-1px); }
+    .nav-cta::after { display: none !important; }
+
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: none; padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: var(--text); border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+
+    /* ── Mobile Nav ── */
+    .mobile-nav {
+      display: none; position: fixed; inset: 0; z-index: 99;
+      background: rgba(10,10,15,.97);
+      backdrop-filter: blur(30px);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 32px;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 700;
+      color: var(--text); text-decoration: none;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .4s forwards;
+    }
+    .mobile-nav a:nth-child(2) { animation-delay: .05s; }
+    .mobile-nav a:nth-child(3) { animation-delay: .1s; }
+    .mobile-nav a:nth-child(4) { animation-delay: .15s; }
+    .mobile-nav a:nth-child(5) { animation-delay: .2s; }
+
+    /* ── Hero ── */
+    #hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 5% 80px;
+      overflow: hidden;
+    }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(108,99,255,.12);
+      border: 1px solid rgba(108,99,255,.3);
+      color: var(--accent2);
+      padding: 6px 16px; border-radius: 50px;
+      font-size: .8rem; font-weight: 500; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 32px;
+      width: fit-content;
+      animation: fadeUp .6s forwards;
+    }
+    .hero-tag .dot-live {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 800; line-height: .95;
+      letter-spacing: -2px;
+      opacity: 0;
+      animation: fadeUp .6s .1s forwards;
+    }
+    .hero-name .line { display: block; overflow: hidden; }
+    .hero-name .accent-text {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      margin-top: 28px; max-width: 540px;
+      font-size: 1.05rem; color: var(--muted); line-height: 1.8;
+      opacity: 0; animation: fadeUp .6s .2s forwards;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 16px; margin-top: 44px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .6s .3s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; text-decoration: none;
+      padding: 14px 30px; border-radius: 50px;
+      font-weight: 500; font-size: .95rem;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 30px rgba(108,99,255,.35);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(108,99,255,.45); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 10px;
+      color: var(--text); text-decoration: none;
+      padding: 14px 30px; border-radius: 50px;
+      border: 1px solid var(--border);
+      font-weight: 500; font-size: .95rem;
+      background: rgba(255,255,255,.04);
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); background: rgba(108,99,255,.08); transform: translateY(-3px); }
+
+    .hero-scroll {
+      position: absolute; bottom: 40px; left: 5%;
+      display: flex; align-items: center; gap: 12px;
+      color: var(--muted); font-size: .8rem; letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0; animation: fadeUp .6s .5s forwards;
+    }
+    .scroll-line {
+      width: 40px; height: 1px; background: var(--muted);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%; background: var(--accent2);
+      animation: scrollAnim 2s infinite;
+    }
+
+    /* ── Floating Badges ── */
+    .hero-badge {
+      position: absolute; right: 5%;
+      display: flex; flex-direction: column; gap: 16px;
+      top: 50%; transform: translateY(-50%);
+      opacity: 0; animation: fadeLeft .6s .4s forwards;
+    }
+    .badge-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      min-width: 200px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.3);
+      transition: transform .3s, box-shadow .3s;
+    }
+    .badge-item:hover { transform: translateX(-6px); box-shadow: var(--glow); }
+    .badge-icon { font-size: 1.5rem; }
+    .badge-label { font-size: .78rem; color: var(--muted); }
+    .badge-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; }
+
+    /* ── Section Base ── */
+    section { position: relative; z-index: 1; padding: 100px 5%; }
+    .section-label {
+      display: flex; align-items: center; gap: 12px;
+      color: var(--accent2); font-size: .75rem;
+      text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .section-label::before {
+      content: ''; width: 24px; height: 1px; background: var(--accent2);
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -1px; margin-bottom: 16px;
+    }
+
+    /* ── About ── */
+    #about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+
+    .profile-wrapper {
+      position: relative;
+      display: flex; justify-content: center;
+    }
+    .profile-frame {
+      position: relative; width: 320px; height: 380px;
+    }
+    .profile-bg {
+      position: absolute; inset: 0;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(108,99,255,.3), rgba(0,229,195,.2));
+      transform: rotate(6deg);
+    }
+    .profile-img {
+      position: absolute; inset: 0;
+      border-radius: 24px; overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ====================================================
+       GANTI src="YOUR_PHOTO.jpg" DENGAN PATH FOTO ANDA
+       Contoh: src="foto.jpg" atau src="images/ferdy.png"
+       ==================================================== */
+    .profile-img img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
+    }
+    .profile-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      color: var(--muted); font-size: .85rem; text-align: center; padding: 20px;
+    }
+    .profile-placeholder svg { opacity: .4; }
+
+    .profile-chip {
+      position: absolute; bottom: -16px; left: -16px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 18px;
+      box-shadow: var(--glow);
+    }
+    .chip-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--accent); }
+    .chip-label { font-size: .72rem; color: var(--muted); }
+
+    .about-text .desc {
+      font-size: 1rem; color: var(--muted); line-height: 1.85;
+      margin-bottom: 32px;
+    }
+
+    .edu-list { display: flex; flex-direction: column; gap: 14px; }
+    .edu-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 18px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: border-color .25s, transform .25s;
+    }
+    .edu-item:hover { border-color: var(--accent); transform: translateX(4px); }
+    .edu-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent2); margin-top: 6px; flex-shrink: 0;
+    }
+    .edu-name { font-weight: 500; font-size: .9rem; }
+    .edu-year { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── Skills ── */
+    #skills { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px; margin-top: 48px;
+    }
+    .skill-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px 20px;
+      text-align: center;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+    }
+    .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: var(--glow); }
+    .skill-icon { font-size: 2rem; margin-bottom: 10px; }
+    .skill-name { font-size: .82rem; font-weight: 500; }
+
+    /* ── Projects ── */
+    #projects .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px; margin-top: 56px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+      display: flex; flex-direction: column;
+    }
+    .project-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: var(--glow); }
+
+    .project-thumb {
+      height: 200px;
+      background: linear-gradient(135deg, rgba(108,99,255,.2), rgba(0,229,195,.1));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; position: relative; overflow: hidden;
+    }
+    .project-thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, var(--card));
+    }
+    /* Warna berbeda tiap project */
+    .project-card:nth-child(2) .project-thumb { background: linear-gradient(135deg, rgba(0,229,195,.2), rgba(108,99,255,.1)); }
+    .project-card:nth-child(3) .project-thumb { background: linear-gradient(135deg, rgba(255,107,107,.2), rgba(108,99,255,.1)); }
+    .project-card:nth-child(4) .project-thumb { background: linear-gradient(135deg, rgba(255,193,7,.15), rgba(0,229,195,.1)); }
+    .project-card:nth-child(5) .project-thumb { background: linear-gradient(135deg, rgba(76,175,80,.2), rgba(108,99,255,.1)); }
+    .project-card:nth-child(6) .project-thumb { background: linear-gradient(135deg, rgba(233,30,99,.2), rgba(108,99,255,.1)); }
+
+    .project-body { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tag {
+      font-size: .7rem; padding: 4px 10px; border-radius: 50px;
+      background: rgba(108,99,255,.15); color: var(--accent2);
+      border: 1px solid rgba(108,99,255,.2); font-weight: 500;
+    }
+    .project-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem;
+      margin-bottom: 10px; line-height: 1.3;
+    }
+    .project-desc { font-size: .88rem; color: var(--muted); line-height: 1.7; flex: 1; }
+
+    .project-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end;
+    }
+
+    /* ====================================================
+       HREF PROJECT: Ganti "#" dengan URL project Anda
+       Contoh: href="https://project1.netlify.app"
+       ==================================================== */
+    .project-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--accent2); font-size: .85rem; font-weight: 500;
+      text-decoration: none; transition: gap .2s, opacity .2s;
+    }
+    .project-link:hover { gap: 12px; opacity: .8; }
+    .project-link svg { transition: transform .2s; }
+    .project-link:hover svg { transform: translate(2px, -2px); }
+
+    /* ── Contact ── */
+    #contact { text-align: center; }
+    #contact .contact-inner {
+      max-width: 620px; margin: 0 auto;
+    }
+    #contact .section-label { justify-content: center; }
+    #contact .section-label::before { display: none; }
+    .contact-desc {
+      color: var(--muted); font-size: 1rem; line-height: 1.8;
+      margin-bottom: 44px;
+    }
+    .contact-links {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    }
+    .contact-chip {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); text-decoration: none;
+      padding: 14px 24px; border-radius: 50px;
+      font-size: .9rem; font-weight: 500;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .contact-chip:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--glow); }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 40px 5%;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: .82rem;
+    }
+    footer span { color: var(--accent); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeLeft {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(1.4); }
+    }
+    @keyframes scrollAnim {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .7s cubic-bezier(.25,.46,.45,.94), transform .7s cubic-bezier(.25,.46,.45,.94);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      #about { grid-template-columns: 1fr; gap: 60px; }
+      .profile-wrapper { order: -1; }
+      .hero-badge { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      #hero { padding-top: 100px; }
+      .hero-ctas { flex-direction: column; width: fit-content; }
+    }
+
+    @media (max-width: 480px) {
+      section { padding: 70px 4%; }
+      .profile-frame { width: 260px; height: 320px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor">
+    <div class="dot"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- Background Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-logo">MF.</div>
+    <ul class="nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">Tentang</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact" class="nav-cta">Kontak</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#hero" onclick="closeMobile()">Home</a>
+    <a href="#about" onclick="closeMobile()">Tentang</a>
+    <a href="#skills" onclick="closeMobile()">Skills</a>
+    <a href="#projects" onclick="closeMobile()">Projects</a>
+    <a href="#contact" onclick="closeMobile()">Kontak</a>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <section id="hero">
+    <div class="hero-tag">
+      <span class="dot-live"></span> Open to Collaboration
+    </div>
+    <h1 class="hero-name">
+      <span class="line">Muhammed</span>
+      <span class="line accent-text">Ferdy</span>
+    </h1>
+    <p class="hero-sub">
+      Mahasiswa Teknik Informatika yang bersemangat memajukan pemikiran melalui teknologi dan informasi.
+    </p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">
+        Lihat Projects
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#contact" class="btn-ghost">
+        Hubungi Saya
+      </a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+
+    <!-- Floating Info Badges -->
+    <div class="hero-badge">
+      <div class="badge-item">
+        <div class="badge-icon">🎓</div>
+        <div>
+          <div class="badge-val">Univ. Jabal Ghafur</div>
+          <div class="badge-label">Teknik Informatika</div>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-icon">📍</div>
+        <div>
+          <div class="badge-val">Banda Aceh</div>
+          <div class="badge-label">Tempat Lahir</div>
+        </div>
+      </div>
+      <div class="badge-item">
+        <div class="badge-icon">💡</div>
+        <div>
+          <div class="badge-val">Web Developer</div>
+          <div class="badge-label">In Progress</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ABOUT ══ -->
+  <section id="about">
+    <!-- Foto Profil -->
+    <div class="profile-wrapper reveal">
+      <div class="profile-frame">
+        <div class="profile-bg"></div>
+        <div class="profile-img">
+          <!--
+            ================================================
+            SISIPKAN FOTO ANDA DI SINI:
+            Ganti "YOUR_PHOTO.jpg" dengan nama file foto Anda
+            Contoh: src="ferdy.jpg" atau src="images/foto.png"
+            ================================================
+          -->
+          <img src="ferdy1.jpeg" alt="Muhammed Ferdy"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+          <div class="profile-placeholder" style="display:none;">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <span>Ganti <code>YOUR_PHOTO.jpg</code><br/>dengan foto Anda</span>
+          </div>
+        </div>
+        <div class="profile-chip">
+          <div class="chip-val">Aceh 🌊</div>
+          <div class="chip-label">Banda Aceh, Indonesia</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bio & Riwayat -->
+    <div class="about-text reveal">
+      <div class="section-label">Tentang Saya</div>
+      <h2 class="section-title">Siapa<br/><span style="color:var(--accent2)">Muhammed Ferdy?</span></h2>
+      <p class="desc">
+        Saya mahasiswa dari Universitas Jabal Ghafur jurusan Teknik Informatika yang ingin memajukan pemikiran dengan teknologi dan informasi. Lahir di Banda Aceh, saya percaya bahwa teknologi adalah jembatan untuk mewujudkan ide-ide besar menjadi solusi nyata.
+      </p>
+
+      <div class="section-label" style="margin-top:32px;">Riwayat Pendidikan</div>
+      <div class="edu-list">
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-name">Universitas Jabal Ghafur</div>
+            <div class="edu-year">Teknik Informatika · Sekarang</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-name">SMA Negeri 1 Peukan Baro</div>
+            <div class="edu-year">Alumni SMA</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-name">SMP Negeri 2 Indrajaya</div>
+            <div class="edu-year">Alumni SMP</div>
+          </div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-dot"></div>
+          <div>
+            <div class="edu-name">SD Negeri 27 Banda Aceh</div>
+            <div class="edu-year">Alumni SD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ SKILLS ══ -->
+  <section id="skills">
+    <div class="reveal">
+      <div class="section-label">Kemampuan</div>
+      <h2 class="section-title">Tech <span style="color:var(--accent2)">Stack</span></h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-card"><div class="skill-icon">🌐</div><div class="skill-name">HTML5</div></div>
+      <div class="skill-card"><div class="skill-icon">🎨</div><div class="skill-name">CSS3</div></div>
+      <div class="skill-card"><div class="skill-icon">⚡</div><div class="skill-name">JavaScript</div></div>
+      <div class="skill-card"><div class="skill-icon">📱</div><div class="skill-name">Responsive</div></div>
+      <div class="skill-card"><div class="skill-icon">🗄️</div><div class="skill-name">Database</div></div>
+    </div>
+  </section>
+
+  <!-- ══ PROJECTS ══ -->
+  <section id="projects">
+    <div class="reveal">
+      <div class="section-label">Karya Saya</div>
+      <h2 class="section-title">Web <span style="color:var(--accent2)">Projects</span></h2>
+    </div>
+    <div class="projects-grid">
+
+      <!-- ============================================
+           PROJECT 1 — GANTI HREF DAN KONTEN
+           href="#"  → ganti dengan URL project Anda
+           emoji     → ganti sesuai tema project
+           Tags      → teknologi yang digunakan
+           ============================================ -->
+      <div class="project-card reveal">
+        <div class="project-thumb">🛒</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+          </div>
+          <div class="project-title">Project 1 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- PROJECT 2 -->
+      <div class="project-card reveal">
+        <div class="project-thumb">📋</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+          </div>
+          <div class="project-title">Project 2 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- PROJECT 3 -->
+      <div class="project-card reveal">
+        <div class="project-thumb">🌍</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">JavaScript</span>
+            <span class="tag">API</span>
+          </div>
+          <div class="project-title">Project 3 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- PROJECT 4 -->
+      <div class="project-card reveal">
+        <div class="project-thumb">📊</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JS</span>
+          </div>
+          <div class="project-title">Project 4 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- PROJECT 5 -->
+      <div class="project-card reveal">
+        <div class="project-thumb">🎮</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">JavaScript</span>
+            <span class="tag">Canvas</span>
+          </div>
+          <div class="project-title">Project 5 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- PROJECT 6 -->
+      <div class="project-card reveal">
+        <div class="project-thumb">✍️</div>
+        <div class="project-body">
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+          </div>
+          <div class="project-title">Project 6 — Nama Project Anda</div>
+          <p class="project-desc">Deskripsi singkat project Anda di sini. Jelaskan apa fungsinya dan apa yang membuat project ini menarik.</p>
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link" target="_blank">
+            Lihat Project
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ CONTACT ══ -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="section-label reveal">Hubungi Saya</div>
+      <h2 class="section-title reveal">Mari <span style="color:var(--accent2)">Berkolaborasi</span></h2>
+      <p class="contact-desc reveal">
+        Punya ide project menarik atau ingin berdiskusi tentang teknologi? Jangan ragu untuk menghubungi saya!
+      </p>
+      <div class="contact-links reveal">
+        <!-- GANTI href dengan link email/sosmed Anda -->
+        <a href="mailto:ferdimuhammed777@gmail.com" class="contact-chip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+          Email
+        </a>
+        <a href="https://github.com/ferdimuhammed777-ux" target="_blank" class="contact-chip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+        <a href="https://wa.me/6283113373056" target="_blank" class="contact-chip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+        <a href="https://www.instagram.com/essstehhangat_?utm_source=qr&igsh=MXM0bndzNWFraWswYg==" target="_blank" class="contact-chip">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Dibuat dengan ❤️ oleh <span>Muhammed Ferdy</span> · Teknik Informatika · Universitas Jabal Ghafur</p>
+  </footer>
+
+  <script>
+    // ── Custom Cursor ──
+    const cursor = document.getElementById('cursor');
+    const dot = cursor.querySelector('.dot');
+    const ring = cursor.querySelector('.ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button, .skill-card, .project-card, .edu-item, .badge-item').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    });
+
+    // ── Navbar Scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ── Hamburger Menu ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobileNav');
+    let menuOpen = false;
+
+    hamburger.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileNav.classList.toggle('open', menuOpen);
+      const spans = hamburger.querySelectorAll('span');
+      if (menuOpen) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+      }
+    });
+
+    function closeMobile() {
+      menuOpen = false;
+      mobileNav.classList.remove('open');
+      hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    }
+
+    // ── Scroll Reveal ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // ── Active Nav Link ──
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 200) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--text)' : '';
+      });
+    });
+  </script>
+</body>
+</html>
