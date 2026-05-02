@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Platform pemesanan transportasi online profesional untuk perjalanan harian dan solusi korporat." />
+  <title>Transportasi Online | Pesan Sekarang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home">GoRide</a>
+      <nav class="main-nav" id="mainNav">
+        <a href="#booking">Pemesanan</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#testimoni">Testimoni</a>
+        <a href="#faq">FAQ</a>
+        <a href="#kontak">Kontak</a>
+      </nav>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="ctaBook">Pesan Sekarang</button>
+        <button class="btn btn-secondary" id="openAuthBtn">Masuk</button>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Buka navigasi">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">Transportasi Online Modern</span>
+          <h1>Pesan kendaraan kapan saja, di mana saja, untuk perjalanan harian atau korporat.</h1>
+          <p>Solusi pemesanan transportasi yang aman, cepat, dan terintegrasi dengan pelacakan real-time, pembayaran digital, dan dukungan pelanggan 24/7.</p>
+          <div class="hero-buttons">
+            <a href="#booking" class="btn btn-primary">Pesan Sekarang</a>
+            <a href="#fitur" class="btn btn-secondary">Pelajari Fitur</a>
+          </div>
+          <div class="hero-highlights">
+            <div>
+              <strong>Ulasan 4.9/5</strong>
+              <p>Layanan transportasi andal</p>
+            </div>
+            <div>
+              <strong>Viral di 50+ kota</strong>
+              <p>Jaringan kendaraan premium</p>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card">
+            <div class="hero-card-top">
+              <div>
+                <p class="label">Travel Business</p>
+                <h2>GoRide Business</h2>
+              </div>
+              <span>24/7</span>
+            </div>
+            <p class="hero-card-text">Kelola perjalanan karyawan dengan transparansi biaya dan pelacakan riil.</p>
+            <div class="hero-card-footer">
+              <div>
+                <p class="meta">Estimasi tiba</p>
+                <strong>7 menit</strong>
+              </div>
+              <div>
+                <p class="meta">Driver</p>
+                <strong>Andi</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="booking-section" id="booking">
+      <div class="container section-intro">
+        <p class="section-label">Pesan perjalanan Anda</p>
+        <h2>Formulir pemesanan cepat dengan perkiraan harga dan lokasi pintar.</h2>
+      </div>
+      <div class="booking-grid">
+        <form class="booking-form" id="bookingForm">
+          <div class="form-group">
+            <label for="pickup">Lokasi Penjemputan</label>
+            <input type="text" id="pickup" name="pickup" placeholder="Masukkan alamat penjemputan" required />
+          </div>
+          <div class="form-group">
+            <label for="dropoff">Lokasi Tujuan</label>
+            <input type="text" id="dropoff" name="dropoff" placeholder="Masukkan alamat tujuan" required />
+          </div>
+          <div class="form-group grid-2">
+            <div>
+              <label for="vehicleType">Jenis Kendaraan</label>
+              <select id="vehicleType" name="vehicleType">
+                <option value="economy" selected>Mobil Pribadi</option>
+                <option value="van">Van</option>
+                <option value="taxi">Taksi</option>
+                <option value="ojek">Ojek Online</option>
+              </select>
+            </div>
+            <div>
+              <label for="schedule">Jadwal</label>
+              <input type="datetime-local" id="schedule" name="schedule" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="notes">Instruksi Tambahan</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Contoh: jemput di depan gedung A"></textarea>
+          </div>
+          <div class="fare-box">
+            <p>Estimasi tarif untuk jenis kendaraan terpilih:</p>
+            <strong id="estimatedFare">Rp 35.000 - Rp 65.000</strong>
+          </div>
+          <button type="submit" class="btn btn-primary">Lanjutkan Pemesanan</button>
+          <p class="booking-note">* Integrasi Google Maps API dapat ditambahkan untuk autocomplete dan rute peta.</p>
+        </form>
+        <div class="booking-aside">
+          <div class="feature-card">
+            <h3>Pelacakan Real-time</h3>
+            <p>Lihat posisi pengemudi secara langsung di peta sejak pesanan diterima.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Konfirmasi otomatis</h3>
+            <p>Notifikasi instan melalui SMS dan email ketika pesanan Anda diupdate.</p>
+          </div>
+          <div class="feature-card">
+            <h3>Pembayaran Aman</h3>
+            <p>Dukungan kartu kredit, dompet digital, dan transfer bank dengan enkripsi penuh.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="fitur">
+      <div class="container section-intro">
+        <p class="section-label">Fitur Unggulan</p>
+        <h2>Semua alat yang dibutuhkan untuk pemesanan transportasi profesional.</h2>
+      </div>
+      <div class="features-grid">
+        <article class="feature-item">
+          <h3>Manajemen Pengguna</h3>
+          <p>Registrasi aman, profil lengkap, riwayat perjalanan, preferensi, dan metode pembayaran tersimpan.</p>
+        </article>
+        <article class="feature-item">
+          <h3>Dasbor Pengemudi</h3>
+          <p>Pengemudi dapat menerima pesanan, memperbarui status, dan mengakses navigasi dalam satu panel.</p>
+        </article>
+        <article class="feature-item">
+          <h3>Pembayaran Terintegrasi</h3>
+          <p>Integrasi gateway pembayaran kartu, digital wallet, dan transfer bank untuk checkout cepat dan aman.</p>
+        </article>
+        <article class="feature-item">
+          <h3>Sistem Rating & Ulasan</h3>
+          <p>Berikan rating pengemudi setelah perjalanan selesai untuk kualitas layanan yang konsisten.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="testimonials-section" id="testimoni">
+      <div class="container section-intro">
+        <p class="section-label">Testimoni</p>
+        <h2>Pelanggan dan klien bisnis menyukai pengalaman GoRide.</h2>
+      </div>
+      <div class="testimonial-grid">
+        <article class="testimonial-card">
+          <p>“Aplikasi ini membuat perjalanan bisnis kami lebih mudah dan transparan. Tracking real-time sangat membantu.”</p>
+          <h4>Rina, HR Manager</h4>
+        </article>
+        <article class="testimonial-card">
+          <p>“Layanan cepat, driver ramah, dan harga jelas. Sangat direkomendasikan untuk transportasi sehari-hari.”</p>
+          <h4>Adi, Freelancer</h4>
+        </article>
+      </div>
+    </section>
+
+    <section class="corporate-section">
+      <div class="container corporate-grid">
+        <div>
+          <p class="section-label">Solusi Korporat</p>
+          <h2>Transportasi perusahaan yang aman, terukur, dan mudah dikelola.</h2>
+          <p>Kelola perjalanan karyawan, atur anggaran transportasi, dan terima laporan biaya secara otomatis tanpa repot.</p>
+          <ul>
+            <li>Account management untuk tim</li>
+            <li>Invoice digital dan laporan bulanan</li>
+            <li>Support khusus bisnis</li>
+          </ul>
+          <a href="#kontak" class="btn btn-secondary">Hubungi Sales</a>
+        </div>
+        <div class="corporate-card">
+          <h3>Transportasi Bisnis</h3>
+          <p>Pesan kendaraan premium, shuttle kantor, dan layanan antar-jemput dengan mudah.</p>
+          <div class="stats-row">
+            <div><strong>99%</strong><span>Kepuasan pelanggan</span></div>
+            <div><strong>50+</strong><span>Kota tercover</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section" id="faq">
+      <div class="container section-intro">
+        <p class="section-label">FAQ</p>
+        <h2>Jawaban untuk pertanyaan umum.</h2>
+      </div>
+      <div class="faq-grid">
+        <article>
+          <h4>Bagaimana cara memesan?</h4>
+          <p>Isi formulir pemesanan, pilih jenis kendaraan dan jadwal, lalu konfirmasi dengan informasi kontak Anda.</p>
+        </article>
+        <article>
+          <h4>Apa metode pembayaran yang tersedia?</h4>
+          <p>Kartu kredit/debit, dompet digital, dan transfer bank. Semua transaksi dienkripsi.</p>
+        </article>
+        <article>
+          <h4>Bagaimana pelacakannya bekerja?</h4>
+          <p>Setelah pesanan dikonfirmasi, pengguna dapat melihat lokasi pengemudi secara real-time di halaman status perjalanan.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="contact-section" id="kontak">
+      <div class="container contact-grid">
+        <div>
+          <p class="section-label">Hubungi Kami</p>
+          <h2>Tim support siap membantu pertanyaan dan pemesanan korporat.</h2>
+          <p>Gunakan formulir ini untuk meminta demo, bantuan teknis, atau penawaran bisnis.</p>
+          <div class="contact-meta">
+            <div><strong>Gmail</strong><p>ferdimuhammed777@gmail.com</p></div>
+            <div><strong>Telepon</strong><p>+62 831 1337 3056</p></div>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="contactName">Nama Lengkap</label>
+            <input type="text" id="contactName" name="contactName" placeholder="Nama lengkap" required />
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="email" id="contactEmail" name="contactEmail" placeholder="Email" required />
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Pesan</label>
+            <textarea id="contactMessage" name="contactMessage" rows="4" placeholder="Tulis pesan Anda" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 GoRide. Solusi pemesanan transportasi online untuk perjalanan harian dan korporat.</p>
+      <div class="footer-links">
+        <a href="#home">Beranda</a>
+        <a href="#fitur">Fitur</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" id="authModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="closeAuthBtn" aria-label="Tutup">×</button>
+      <h2>Masuk atau Daftar</h2>
+      <div class="auth-tabs">
+        <button class="tab-button active" data-tab="login">Login</button>
+        <button class="tab-button" data-tab="register">Daftar</button>
+      </div>
+      <form id="authForm">
+        <div class="form-group">
+          <label for="authEmail">Email</label>
+          <input type="email" id="authEmail" name="authEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" name="authPassword" required />
+        </div>
+        <button type="submit" class="btn btn-primary" id="authSubmitBtn">Masuk</button>
+      </form>
+      <div class="social-login">
+        <p>Atau masuk cepat dengan</p>
+        <div>
+          <button class="btn btn-secondary">Google</button>
+          <button class="btn btn-secondary">Facebook</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
